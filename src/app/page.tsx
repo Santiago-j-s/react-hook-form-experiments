@@ -136,7 +136,7 @@ function EmailInput() {
     <TextInput
       name="email"
       options={{
-        required: true,
+        required: "Email is required",
         validate: {
           isEmail: (value) => value.includes("@") || "Not a valid email",
         },
