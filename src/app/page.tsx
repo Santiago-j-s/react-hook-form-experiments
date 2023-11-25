@@ -31,10 +31,11 @@ function FormWrapper({ children }: { children: ReactNode }) {
       password: "",
     },
     mode: "onChange",
+    shouldUseNativeValidation: true,
   });
 
   return (
-    <div className="flex flex-col gap-4 max-w-lg w-full">
+    <div className="flex w-full max-w-lg flex-col gap-4">
       <FormProvider {...methods}>{children}</FormProvider>
     </div>
   );
@@ -108,6 +109,7 @@ function TextInput({
         {...register(name, options)}
         type={type}
         name={name}
+        className="rounded-sm border border-gray-500 px-2 py-1 invalid:border invalid:border-red-500 focus:border-blue-500 invalid:focus:border-red-500 focus-visible:outline-none"
       />
       <Error name={name} />
     </label>
@@ -195,7 +197,7 @@ function ArrayInputs() {
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col p-24 items-center">
+    <main className="flex min-h-screen flex-col items-center p-24">
       <FormWrapper>
         <Form>
           <NameInput />
@@ -205,7 +207,7 @@ export default function Home() {
         <button
           form="form"
           type="submit"
-          className="w-fit px-2 py-1 rounded-sm border border-gray-500 hover:bg-gray-500 hover:text-white"
+          className="w-fit rounded-sm border border-gray-500 px-2 py-1 hover:bg-gray-500 hover:text-white"
         >
           Submit
         </button>
