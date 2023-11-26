@@ -10,7 +10,9 @@ import {
   useFormState,
   useWatch,
   type RegisterOptions,
+  type UseFieldArrayRemove,
 } from "react-hook-form";
+import { Button, Input } from "./atoms";
 
 interface FormValues {
   name: string;
@@ -35,7 +37,7 @@ function FormWrapper({ children }: { children: ReactNode }) {
   });
 
   return (
-    <div className="flex w-full max-w-lg flex-col gap-4">
+    <div className="flex w-full flex-col gap-4">
       <FormProvider {...methods}>{children}</FormProvider>
     </div>
   );
@@ -50,7 +52,7 @@ function Form({ children }: { children: ReactNode }) {
 
   return (
     <form
-      className="flex flex-col gap-4"
+      className="grid grid-cols-[1fr_2fr] gap-4"
       id="form"
       onSubmit={handleSubmit(onSubmit)}
     >
@@ -108,12 +110,11 @@ function TextInput({
   return (
     <label htmlFor={name} className="grid grid-cols-2">
       {children}
-      <input
+      <Input
         id={`input-${name}`}
         {...register(name, options)}
         type={type}
         name={name}
-        className="rounded-sm border border-gray-500 px-2 py-1 invalid:outline-red-500 focus-visible:border-none focus-visible:outline-none focus-visible:outline-gray-500 focus-visible:ring-0 invalid:focus-visible:outline-red-500"
       />
       <Error name={name} />
     </label>
@@ -170,51 +171,66 @@ function PasswordInput() {
   );
 }
 
-function ArrayInputs() {
+function ArrayInputRow({
+  index,
+  remove,
+}: {
+  index: number;
+  remove: UseFieldArrayRemove;
+}) {
   const { register } = useFormContext<FormValues>();
+
+  return (
+    <li className="flex items-center gap-4">
+      <Input type="text" {...register(`array.${index}.value1`)} />
+      <Input type="text" {...register(`array.${index}.value2`)} />
+      <Input type="text" {...register(`array.${index}.value3`)} />
+      <Button type="button" onClick={() => remove(index)}>
+        Remove
+      </Button>
+    </li>
+  );
+}
+
+function ArrayInputs() {
   const { fields, append, remove } = useFieldArray<FormValues>({
     name: "array",
   });
 
   return (
-    <div className="flex flex-col gap-4">
-      <h2 className="text-xl">Array</h2>
-      {fields.map((field, index) => (
-        <div key={field.id} className="flex gap-4">
-          <input type="text" {...register(`array.${index}.value1`)} />
-          <input type="text" {...register(`array.${index}.value2`)} />
-          <input type="text" {...register(`array.${index}.value3`)} />
-          <button type="button" onClick={() => remove(index)}>
-            Remove
-          </button>
-        </div>
-      ))}
-      <button
+    <fieldset className="flex flex-col items-start gap-4 rounded-sm border-2 border-gray-300 p-2">
+      <legend>Array Inputs</legend>
+      <ul className="grid gap-2">
+        {fields.map((field, index) => (
+          <ArrayInputRow key={field.id} index={index} remove={remove} />
+        ))}
+      </ul>
+      <Button
         type="button"
         onClick={() => append({ value1: null, value2: null, value3: null })}
       >
         Append
-      </button>
-    </div>
+      </Button>
+    </fieldset>
   );
 }
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center p-24">
+    <main className="flex min-h-screen max-w-[100vw] items-center p-24">
       <FormWrapper>
         <Form>
-          <NameInput />
-          <EmailInput />
-          <PasswordInput />
+          <fieldset className="rounded-sm border-2 border-gray-300 p-2">
+            <legend>Inputs</legend>
+            <NameInput />
+            <EmailInput />
+            <PasswordInput />
+          </fieldset>
+          <ArrayInputs />
         </Form>
-        <button
-          form="form"
-          type="submit"
-          className="w-fit rounded-sm border border-gray-500 px-2 py-1 hover:bg-gray-500 hover:text-white"
-        >
+        <Button form="form" type="submit">
           Submit
-        </button>
+        </Button>
         <ShowValues />
       </FormWrapper>
     </main>
