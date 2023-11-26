@@ -85,7 +85,11 @@ function Error({ name }: { name: "name" | "email" | "password" }) {
 
   const error = errors[name];
 
-  return <div className="text-red-500">{error ? error.message : null}</div>;
+  return (
+    <div className="min-h-[1em] text-xs text-red-500">
+      {error ? error.message : null}
+    </div>
+  );
 }
 
 function TextInput({
@@ -109,7 +113,7 @@ function TextInput({
         {...register(name, options)}
         type={type}
         name={name}
-        className="rounded-sm border border-gray-500 px-2 py-1 invalid:border invalid:border-red-500 focus:border-blue-500 invalid:focus:border-red-500 focus-visible:outline-none"
+        className="rounded-sm border border-gray-500 px-2 py-1 invalid:outline-red-500 focus-visible:border-none focus-visible:outline-none focus-visible:outline-gray-500 focus-visible:ring-0 invalid:focus-visible:outline-red-500"
       />
       <Error name={name} />
     </label>

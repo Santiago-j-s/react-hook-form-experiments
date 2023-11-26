@@ -70,3 +70,8 @@ h6 {
 #__next {
   isolation: isolate;
 }
+
+inpud:focus-visible {
+  outline: none;
+  border: none;
+}
