@@ -33,6 +33,7 @@ module.exports = {
       "error",
       {
         ignoreRestSiblings: true,
+        varsIgnorePattern: "^_",
       },
     ],
     "@typescript-eslint/no-misused-promises": [

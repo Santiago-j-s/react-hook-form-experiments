@@ -52,7 +52,7 @@ function Form({ children }: { children: ReactNode }) {
 
   return (
     <form
-      className="grid grid-cols-[1fr_2fr] gap-4"
+      className="grid grid-cols-3 gap-4"
       id="form"
       onSubmit={handleSubmit(onSubmit)}
     >
@@ -180,11 +180,58 @@ function ArrayInputRow({
 }) {
   const { register } = useFormContext<FormValues>();
 
+  const { errors } = useFormState<FormValues>({
+    name: [
+      `array.${index}.value1`,
+      `array.${index}.value2`,
+      `array.${index}.value3`,
+    ],
+  });
+
+  const error = errors.array?.[index] ?? null;
+
   return (
     <li className="flex items-center gap-4">
-      <Input type="text" {...register(`array.${index}.value1`)} />
-      <Input type="text" {...register(`array.${index}.value2`)} />
-      <Input type="text" {...register(`array.${index}.value3`)} />
+      <Input
+        type="text"
+        {...register(`array.${index}.value1`, {
+          setValueAs: (value) => (value === "" ? null : Number(value)),
+          required: "Value is required",
+          validate: {
+            isNumber: (value) => {
+              if (value !== null && isNaN(value)) {
+                return "Value must be a number";
+              }
+            },
+          },
+        })}
+        className="w-24"
+      />
+      {error?.value1 ? (
+        <div className="min-h-[1em] text-xs text-red-500">
+          {error.value1.message}
+        </div>
+      ) : null}
+      <Input
+        type="text"
+        {...register(`array.${index}.value2`)}
+        className="w-24"
+      />
+      {error?.value2 ? (
+        <div className="min-h-[1em] text-xs text-red-500">
+          {error.value2.message}
+        </div>
+      ) : null}
+      <Input
+        type="text"
+        {...register(`array.${index}.value3`)}
+        className="w-24"
+      />
+      {error?.value3 ? (
+        <div className="min-h-[1em] text-xs text-red-500">
+          {error.value3.message}
+        </div>
+      ) : null}
       <Button type="button" onClick={() => remove(index)}>
         Remove
       </Button>
@@ -217,7 +264,7 @@ function ArrayInputs() {
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen max-w-[100vw] items-center p-24">
+    <main className="flex min-h-screen max-w-[100vw] items-start px-24 py-10">
       <FormWrapper>
         <Form>
           <fieldset className="rounded-sm border-2 border-gray-300 p-2">
