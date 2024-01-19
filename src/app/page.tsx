@@ -37,7 +37,7 @@ const dropdownOptions = [
     label: "Guardar Borrador",
     schema: z.object({
       name: z.string(),
-      email: z.number(),
+      email: z.string(),
       password: z.string(),
     }),
   },
